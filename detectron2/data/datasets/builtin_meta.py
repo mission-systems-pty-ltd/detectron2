@@ -347,4 +347,16 @@ def _get_builtin_metadata(dataset_name):
             "thing_classes": CITYSCAPES_THING_CLASSES,
             "stuff_classes": CITYSCAPES_STUFF_CLASSES,
         }
+    elif dataset_name == 'FastDataGen':
+        # fmt: off
+        FASTDATAGEN_THING_CLASSES = [
+            "mud", "sand", "gravellySand",
+            "muddyGravel", "muddySand", "siltySand",
+        ]
+        # fmt: on
+        return {
+            'thing_classes': FASTDATAGEN_THING_CLASSES,
+            'stuff_classes': FASTDATAGEN_THING_CLASSES
+        }
+
     raise KeyError("No built-in metadata for dataset {}".format(dataset_name))

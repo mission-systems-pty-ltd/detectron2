@@ -210,6 +210,29 @@ def register_all_cityscapes(root):
             **meta,
         )
 
+_RAW_FASTDATAGEN_SPLITS = {
+    "FastDataGen_fine_{task}_train": ("FastDataGen_10/train/data", "FastDataGen_10/train/annotations/"),
+    "FastDataGen_fine_{task}_val": ("FastDataGen_10/train/data", "FastDataGen_10/train/annotations/"),
+    "FastDataGen_fine_{task}_test": ("FastDataGen_10/train/data", "FastDataGen_10/train/annotations/"),
+}
+
+def register_all_fastdatagen(root):
+    for key, (image_dir, gt_dir) in _RAW_FASTDATAGEN_SPLITS.items():
+        meta = _get_builtin_metadata("FastDataGen")
+        image_dir = os.path.join(root, image_dir)
+        gt_dir = os.path.join(root, gt_dir)
+
+        sem_key = key.format(task="sem_seg")
+        DatasetCatalog.register(
+            sem_key, lambda x=image_dir, y=gt_dir: load_cityscapes_semantic(x, y)
+        )
+        MetadataCatalog.get(sem_key).set(
+            image_dir=image_dir,
+            gt_dir=gt_dir,
+            evaluator_type="cityscapes_sem_seg",
+            ignore_label=255,
+            **meta,
+        )
 
 # ==== Predefined splits for PASCAL VOC ===========
 def register_all_pascal_voc(root):
@@ -255,5 +278,6 @@ if __name__.endswith(".builtin"):
     register_all_lvis(_root)
     register_all_cityscapes(_root)
     register_all_cityscapes_panoptic(_root)
+    register_all_fastdatagen(_root)
     register_all_pascal_voc(_root)
     register_all_ade20k(_root)
